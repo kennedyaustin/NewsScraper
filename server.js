@@ -10,7 +10,6 @@ var cheerio = require("cheerio");
 
 // Require all models
 var db = require("./models");
-const { Note, Article } = require("./models");
 
 var PORT = 3000;
 
@@ -64,13 +63,10 @@ app.get("/scrape", function(req, res) {
         });
     });
 
+    // Send a message to the client
+    res.send("Scrape Complete");
   });
-  res.redirect('/')
 });
-
-app.get('/', function(req, res) {
-  res.send(index.html)
-})
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
@@ -86,20 +82,6 @@ app.get("/articles", function(req, res) {
     });
 });
 
-app.get('/notes', function(req,res) {
-
-  Note.find({}, function(err, response) {
-
-    if (err) {
-      res.send(err)
-    } else {
-      res.send(response)
-    }
-
-  })
-
-})
-
 // Route for grabbing a specific Article by id, populate it with it's note
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
@@ -114,46 +96,6 @@ app.get("/articles/:id", function(req, res) {
       // If an error occurred, send it to the client
       res.json(err);
     });
-});
-
-// New note creation via POST route
-app.post("/submit/:id", function (req, res) {
-  // Use our Note model to make a new note from the req.body
-  var newNote = new Note(req.body);
-
-  // Save the new note to mongoose
-  newNote.save(function (error, doc) {
-      // Send any errors to the browser
-      if (error) {
-          res.send(error);
-      }
-      // Otherwise
-      else {
-          // Find our user and push the new note id into the User's notes array
-          Article.findOneAndUpdate(
-            {
-              "_id": req.params.id
-            }, 
-            {
-              $push: {
-                  "notes": doc._id
-              }
-            }, 
-            {
-              new: true
-            }, 
-            function (err, newdoc) {
-              // Send any errors to the browser
-              if (err) {
-                  res.send(err);
-              }
-              // Or send the newdoc to the browser
-              else {
-                  res.send(newdoc);
-              }
-          });
-      }
-  });
 });
 
 // Route for saving/updating an Article's associated Note

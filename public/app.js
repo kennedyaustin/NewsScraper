@@ -1,29 +1,31 @@
-// Grab the articles as a json
+//get everything in database and add to the page
 function getArticles() {
+  $("#posts").empty();
+  //get all of the data and add to page
+  $.getJSON("/articles", function (data) {
+      for (var i = 0; i < data.length; i++) {
+          //for each article - display on the page
+          //check to make sure data is coming back correctly :) yay... moving on.
+          //console.log(data[i].title);
+          //console.log(data[i].link);
+          if (data[i].notes.length > 0) {
+          $("#posts").append("<li class='list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + "<br><a href='" + data[i].link +
+           "'>Link to Article</a> <span class='badge'>" + data[i].notes.length + "</span> </li>");
+          }
+          else {
+            $("#posts").append("<li class='list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + "<br><a href='" + data[i].link + 
+            "'>Link to Article</a> </li>");
+          }
+          console.log(data[i].notes.length);
 
-  $('#articles').empty()
-  $.getJSON("/articles", function(data) {
-    // For each one
-    for (var i = 0; i < data.length; i++) {
-      
-      if (data[i].notes.length > 0) {
-        // Display the apropos information on the page
-      $("#articles").append("<li class= 'list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title +
-       "<br> <a href='" + data[i].link + "'>Link to Article</a> <span class= 'badge'>" + data[i].notes.length + "</span> </li>");
-      } else {
-        $('#articles').append("<li class= 'list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + 
-       "<br> <a href= '" + data[i].link + "'>Link to Article</a> </li>")
       }
-
-    }
   });
-
 }
-getArticles()
+getArticles();
 
 
 // Whenever someone clicks a p tag
-$(document).on("click", "li", function() {
+$(document).on("click", "p", function() {
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
