@@ -1,55 +1,46 @@
-//get everything in database and add to the page
-//front end js
-
-//get everything in database and add to the page
+// Get everything in database and add to the page
 function getArticles() {
   $("#scrapedArticles").empty();
-  //get all of the data and add to page
   $.getJSON("/articles", function (data) {
       for (var i = 0; i < data.length; i++) {
-          //for each article - display on the page
-          //check to make sure data is coming back correctly :) yay... moving on.
-          //console.log(data[i].title);
-          //console.log(data[i].link);
-          if (data[i].notes.length > 0) {
-          $("#scrapedArticles").append("<li class='list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + "<br><a href='http://reactkungfu.com/" + data[i].link + "'>Link to article</a><span class='badge'>"+data[i].notes.length+"</span></li>");
-          }
-          else {
-              $("#scrapedArticles").append("<li class='list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + "<br><a href='http://reactkungfu.com/" + data[i].link + "'>Link to article</a></li>");
-          }
-          console.log(data[i].notes.length);
+
+        // Display each article on the page
+        if (data[i].notes.length > 0) {
+        $("#scrapedArticles").append("<li class='list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + "<br><a href='http://reactkungfu.com/" + data[i].link + "'>Link to article</a><span class='badge'>"+data[i].notes.length+"</span></li>");
+        }
+        else {
+            $("#scrapedArticles").append("<li class='list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + "<br><a href='http://reactkungfu.com/" + data[i].link + "'>Link to article</a></li>");
+        }
 
       }
   });
 }
 getArticles();
 
-//onclick to show or activate the notes panel and list historical notes below
-var artId;
+// Onclick event to show the notes that have already been added to the page when a particular post is clicked on
+var articleID;
 $(document).on("click", "li", function () {
-  console.log("I was clicked");
-  // Empty the notes from the note section
+  // Empty the notes from the note section when there are none
+  $('#userNotes').empty()
   // Save the id from the p tag
-  var artId = $(this).attr("data-id");
-  $("#addNote").attr("data-id", artId);
-  console.log("This is my id: " + artId);
-  $('#pNotes').empty()
+  var articleID = $(this).attr("data-id");
+  $("#addNote").attr("data-id", articleID);
 
   $.ajax({
-          method: "GET",
-          url: "/articles/" + artId
-      })
-      // With that done, add the note information to the page
-      .done(function (data) {
-          for (var i = 0; i < data.notes.length; i++) {
-              console.log(data.notes[i]);
-              if (data.notes[i].title && data.notes[i].body) {
-                  $('#pNotes').append("<li class='list-group-item'>Title: <strong>" + data.notes[i].title + "</strong></li>");
-                  $('#pNotes').append("<li class='list-group-item'>Comment: " + data.notes[i].body + "</li>");
-                  console.log(data.notes.length);
-              }
+    method: "GET",
+    url: "/articles/" + articleID
+  })
+    // When the ajax is done, add the note information to the page
+    .then(function (data) {
+        for (var i = 0; i < data.notes.length; i++) {
+
+          if (data.notes[i].title && data.notes[i].body) {
+            $('#userNotes').append("<li class='list-group-item'><strong>Title:</strong> " + data.notes[i].title + "</li>");
+            $('#userNotes').append("<li class='list-group-item'><strong>Comment:</strong> " + data.notes[i].body + "</li>"); 
           }
-      });
+
+        }
+    });
 });
 //get req.body.note and username and post to database
 // When you click the savenote button

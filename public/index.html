@@ -13,17 +13,17 @@
       <div class="row">
         <div class="col-md-7">
           <div class="panel">
-            <div class="panel-heading">
-              <h3 class="panel-title">Articles from EchoJS</h3>
+            <div class="panel-heading mt-2 mb-2">
+              <h3 class="panel-title">NYT American Scraper</h3>
             </div>
             <div class="panel-body">
               <h5>
                 Click on a link to visit the article of your choosing, click on any article title
-                to leave a note on that particular topic.
+                to leave a note.
               </h5>
             </div>
             <div class="panel-heading">
-              <h3 class="panel-title">Choose your Topic!</h3>
+              <h3 class="panel-title">Pick an Article</h3>
             </div>
             <ul class="list-group" id="scrapedArticles">
             </ul>
@@ -31,22 +31,22 @@
         </div>
         <div class="col-md-5">
           <div class="panel">
-            <div class="panel-heading">
-              <h3 class="panel-title">Notes</h3>
+            <div class="panel-heading mt-2 mb-2">
+              <h3 class="panel-title">Your Notes Here</h3>
             </div>
             <div class="panel-body">
               <form>
                 <div class="form-group" id="notes">
                   <input type="text" name="title" id="titleinput" class="form-control" placeholder="Title"><br>
-                  <textarea class="form-control" name="body" id="bodyinput" rows="5" placeholder="add notes on content here"></textarea><br>
-                  <button type="button" class="btn btn-warning" id="addNote">Save</button>
+                  <textarea class="form-control" style= 'resize: none' name="body" id="bodyinput" rows="4" placeholder="add notes on content here"></textarea><br>
+                  <button type="button" class="btn btn-primary" id="addNote">Save</button>
                 </div>
               </form>
             </div>
             <div class="panel-heading" id="comments">
-              <h3 class="panel-title">Previous comments</h3>
+              <h3 class="panel-title">Previous Notes</h3>
             </div>
-            <ul class="list-group" id="pNotes">
+            <ul class="list-group" id="userNotes">
             </ul>
           </div>
         </div>

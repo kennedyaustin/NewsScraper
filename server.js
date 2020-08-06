@@ -1,6 +1,7 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var bodyParser = require("body-parser");
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -10,6 +11,8 @@ var cheerio = require("cheerio");
 
 // Require all models
 var db = require("./models");
+const Article = require("./models/Article");
+const Note = require("./models/Note.js");
 
 var PORT = 3000;
 
@@ -34,7 +37,7 @@ mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true 
 // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
-  axios.get("http://www.echojs.com/").then(function(response) {
+  axios.get("https://www.nytimes.com/section/world/americas").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
@@ -71,7 +74,7 @@ app.get("/scrape", function(req, res) {
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
   // Grab every document in the Articles collection
-  db.Article.find({})
+  db.Article.find({}).populate('notes')
     .then(function(dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
@@ -84,10 +87,8 @@ app.get("/articles", function(req, res) {
 
 // Route for grabbing a specific Article by id, populate it with it's note
 app.get("/articles/:id", function(req, res) {
-  // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   db.Article.findOne({ _id: req.params.id })
-    // ..and populate all of the notes associated with it
-    .populate("note")
+    .populate("notes")
     .then(function(dbArticle) {
       // If we were able to successfully find an Article with the given id, send it back to the client
       res.json(dbArticle);
@@ -116,6 +117,57 @@ app.post("/articles/:id", function(req, res) {
       // If an error occurred, send it to the client
       res.json(err);
     });
+});
+
+app.get('/notes', function(req, res) {
+
+  Note.find({}, function(err, noteContent) {
+
+    if (err) {
+      res.json(err)
+    } else {
+      res.json(noteContent)
+    }
+
+  })
+
+})
+
+// New note creation via POST route
+app.post("/submit/:id", function (req, res) {
+  // Use our Note model to make a new note from the req.body
+  console.log(req.body)
+  var newNote = new Note(req.body);
+
+  // Save the new note to mongoose
+  newNote.save(function (error, doc) {
+      // Send any errors to the browser
+      if (error) {
+          res.send(error);
+      }
+      // Otherwise
+      else {
+          // Find our user and push the new note id into the User's notes array
+          Article.findOneAndUpdate({
+              "_id": req.params.id
+          }, {
+              $push: {
+                  "notes": doc._id
+              }
+          }, {
+              new: true
+          }, function (err, newdoc) {
+              // Send any errors to the browser
+              if (err) {
+                  res.send(err);
+              }
+              // Or send the newdoc to the browser
+              else {
+                  res.send(newdoc);
+              }
+          });
+      }
+  });
 });
 
 // Start the server
