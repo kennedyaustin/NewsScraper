@@ -1,15 +1,29 @@
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  // For each one
-  for (var i = 0; i < data.length; i++) {
-    // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-  }
-});
+function getArticles() {
+
+  $('#articles').empty()
+  $.getJSON("/articles", function(data) {
+    // For each one
+    for (var i = 0; i < data.length; i++) {
+      
+      if (data[i].notes.length > 0) {
+        // Display the apropos information on the page
+      $("#articles").append("<li class= 'list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title +
+       "<br> <a href='" + data[i].link + "'>Link to Article</a> <span class= 'badge'>" + data[i].notes.length + "</span> </li>");
+      } else {
+        $('#articles').append("<li class= 'list-group-item post-title' data-id='" + data[i]._id + "'>" + data[i].title + 
+       "<br> <a href= '" + data[i].link + "'>Link to Article</a> </li>")
+      }
+
+    }
+  });
+
+}
+getArticles()
 
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
+$(document).on("click", "li", function() {
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
