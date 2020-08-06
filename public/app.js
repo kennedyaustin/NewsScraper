@@ -42,31 +42,30 @@ $(document).on("click", "li", function () {
         }
     });
 });
-//get req.body.note and username and post to database
-// When you click the savenote button
+
+// Get req.body.note/user id and post to database
+// When you click the Save button from the index.html
 $("#addNote").on("click", function () {
-  // Grab the id associated with the article from the submit button
+  // Grab the id associated with the article from the Save button
   var thisId = $(this).attr("data-id");
-  // alert("this is the Id of the article " + thisId);
 
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
-          method: "POST",
-          url: "/submit/" + thisId,
-          data: {
-              // Value taken from title input
-              title: $("#titleinput").val(),
-              // Value taken from note textarea
-              body: $("#bodyinput").val()
-          }
-      })
-      // With that done
-      .done(function (data) {
-          // Log the response
-          console.log(data);
-          // Empty the notes section
-
-      });
+    method: "POST",
+    url: "/submit/" + thisId,
+    data: {
+        // Value taken from title input
+        title: $("#titleinput").val(),
+        // Value taken from note textarea
+        body: $("#bodyinput").val()
+    }
+  })
+  // With that done
+  .then(function (data) {
+      // Log the response
+      console.log(data);
+      // Empty the notes section
+  });
 
   // Also, remove the values entered in the input and textarea for note entry
   $("#titleinput").val("");

@@ -61,7 +61,7 @@ app.get("/scrape", function(req, res) {
           console.log(dbArticle);
         })
         .catch(function(err) {
-          // If an error occurred, log it
+          // If an err occurred, log it
           console.log(err);
         });
     });
@@ -80,7 +80,7 @@ app.get("/articles", function(req, res) {
       res.json(dbArticle);
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
+      // If an err occurred, send it to the client
       res.json(err);
     });
 });
@@ -94,7 +94,7 @@ app.get("/articles/:id", function(req, res) {
       res.json(dbArticle);
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
+      // If an err occurred, send it to the client
       res.json(err);
     });
 });
@@ -114,13 +114,15 @@ app.post("/articles/:id", function(req, res) {
       res.json(dbArticle);
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
+      // If an err occurred, send it to the client
       res.json(err);
     });
 });
 
+// Route to view notes that user has added to the article
 app.get('/notes', function(req, res) {
 
+  // Find all notes in the note collection with the help of Note model
   Note.find({}, function(err, noteContent) {
 
     if (err) {
@@ -133,40 +135,40 @@ app.get('/notes', function(req, res) {
 
 })
 
-// New note creation via POST route
+// Route to create a new note when the Save button is clicked
 app.post("/submit/:id", function (req, res) {
-  // Use our Note model to make a new note from the req.body
-  console.log(req.body)
+  // Using our Note model to post a new note from the req.body
   var newNote = new Note(req.body);
 
   // Save the new note to mongoose
-  newNote.save(function (error, doc) {
-      // Send any errors to the browser
-      if (error) {
-          res.send(error);
-      }
-      // Otherwise
-      else {
-          // Find our user and push the new note id into the User's notes array
-          Article.findOneAndUpdate({
-              "_id": req.params.id
-          }, {
-              $push: {
-                  "notes": doc._id
-              }
-          }, {
-              new: true
-          }, function (err, newdoc) {
-              // Send any errors to the browser
-              if (err) {
-                  res.send(err);
-              }
-              // Or send the newdoc to the browser
-              else {
-                  res.send(newdoc);
-              }
-          });
-      }
+  newNote.save(function (err, note) {
+
+    if (err) {
+
+      res.json(err);
+
+    } else {
+
+      // Find our user and update the note id with the comment/title info
+      Article.findOneAndUpdate({
+        "_id": req.params.id
+      }, {
+        $push: {
+          "notes": note._id
+        }
+      }, {
+        new: true
+      }, function (err, newNote) {
+
+        if (err) {
+            res.json(err);
+        }
+        else {
+            res.json(newNote);
+        }
+
+      });
+    }
   });
 });
 
