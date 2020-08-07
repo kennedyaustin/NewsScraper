@@ -2,28 +2,40 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>EchoJS Scraper</title>
+    <title>NPR Scraper</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     
+    <style>
+
+      body {
+        background-color: black;
+      }
+      h3, h5 {
+        color: #005389;
+      }
+
+
+    </style>
+
   </head>
   <body>
+    <img style= 'min-width: 100%;' src= 'https://www.gpb.org/sites/default/files/styles/banner_image/public/2020-07/allthingsconsidered_banner.png?h=aff49aa2&itok=IIhsFUh_'>
     <div class="container">
-      
       <div class="row">
         <div class="col-md-7">
           <div class="panel">
             <div class="panel-heading mt-2 mb-2">
-              <h3 class="panel-title">NYT American Scraper</h3>
+              <h3 class="panel-title text-center">NPR News Scraper</h3>
             </div>
-            <div class="panel-body">
+            <div class="panel-body text-center">
               <h5>
-                Click on a link to visit the article of your choosing, click on any article title
-                to leave a note.
+                Click on any link to visit the article of your choosing. The titles of the articles can 
+                also be clicked on to leave a note, as well as view previous comments.
               </h5>
             </div>
             <div class="panel-heading">
-              <h3 class="panel-title">Pick an Article</h3>
+              <h3 class="panel-title text-center">Pick an Article</h3>
             </div>
             <ul class="list-group" id="scrapedArticles">
             </ul>
@@ -32,21 +44,21 @@
         <div class="col-md-5">
           <div class="panel">
             <div class="panel-heading mt-2 mb-2">
-              <h3 class="panel-title">Your Notes Here</h3>
+              <h3 class="panel-title text-center">Your Comments Here</h3>
             </div>
             <div class="panel-body">
               <form>
                 <div class="form-group" id="notes">
                   <input type="text" name="title" id="titleinput" class="form-control" placeholder="Title"><br>
-                  <textarea class="form-control" style= 'resize: none' name="body" id="bodyinput" rows="4" placeholder="add notes on content here"></textarea><br>
-                  <button type="button" class="btn btn-primary" id="addNote">Save</button>
+                  <textarea class="form-control" style= 'resize: none' name="body" id="bodyinput" rows="4" placeholder="Add Your Comments Here"></textarea><br>
+                  <button type="button" class="btn btn-primary" id="addComment">Save</button>
                 </div>
               </form>
             </div>
             <div class="panel-heading" id="comments">
-              <h3 class="panel-title">Previous Notes</h3>
+              <h3 class="panel-title text-center">Previous Comments</h3>
             </div>
-            <ul class="list-group" id="userNotes">
+            <ul class="list-group" id="userComments">
             </ul>
           </div>
         </div>

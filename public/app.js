@@ -5,18 +5,26 @@ function getArticles() {
 
     for (var i = 0; i < data.length; i++) {
       // Display each article on the page with title, link, and summary
-      if (data[i].notes.length > 0) {
+      // Changes display of 'comment, comments, or nothing' depending on how many comments are on that article
+      if (data[i].notes.length == 1) {
         $("#scrapedArticles")
         .append(
           "<li class='list-group-item post-title' data-id='" + data[i]._id + "'><h4>" + 
-          data[i].title + "</h4><br><br><p>" + data[i].summary + "</p> <br> <a href='" + data[i].link +
+          data[i].title + "</h4><br><br><p>" + data[i].summary + "</p> <br> <a target= '_blank' href='" + data[i].link +
+           "'>Link to article</a><span class='badge'>" + data[i].notes.length + " Comment</span></li>"
+        );
+      } else if (data[i].notes.length > 0) {
+        $("#scrapedArticles")
+        .append(
+          "<li class='list-group-item post-title' data-id='" + data[i]._id + "'><h4>" + 
+          data[i].title + "</h4><br><br><p>" + data[i].summary + "</p> <br> <a target= '_blank' href='" + data[i].link +
            "'>Link to article</a><span class='badge'>" + data[i].notes.length + " Comments</span></li>"
         );
       } else {
         $("#scrapedArticles")
         .append(
           "<li class='list-group-item post-title' data-id='" + data[i]._id + "'><h4>" +
-          data[i].title + "</h4><br><br><p>" + data[i].summary + "</p> <br> <a href='" + data[i].link + "'>Link to article</a></li>"
+          data[i].title + "</h4><br><br><p>" + data[i].summary + "</p> <br> <a target= '_blank' href='" + data[i].link + "'>Link to article</a></li>"
         );
       }
     }
@@ -29,10 +37,10 @@ getArticles();
 var articleID;
 $(document).on("click", "li", function() {
   // Empty the notes from the note section when there are none
-  $('#userNotes').empty()
+  $('#userComments').empty()
   // Save the id from the p tag
   var articleID = $(this).attr("data-id");
-  $("#addNote").attr("data-id", articleID);
+  $("#addComment").attr("data-id", articleID);
 
   $.ajax({
     method: "GET",
@@ -43,8 +51,8 @@ $(document).on("click", "li", function() {
 
     for (var i = 0; i < data.notes.length; i++) {
       if (data.notes[i].title && data.notes[i].body) {
-        $('#userNotes').append("<li class='list-group-item'><strong>Title:</strong> " + data.notes[i].title + "</li>");
-        $('#userNotes').append("<li class='list-group-item'><strong>Comment:</strong> " + data.notes[i].body + "</li>"); 
+        $('#userComments').append("<li class='list-group-item'><strong>Title:</strong><br> " + data.notes[i].title + "</li>");
+        $('#userComments').append("<li class='list-group-item'><strong>Comment:</strong><br> " + data.notes[i].body + "</li>"); 
       }
     }
     
@@ -53,7 +61,7 @@ $(document).on("click", "li", function() {
 
 // Get req.body.note/user id and post to database
 // When you click the Save button from the index.html
-$("#addNote").on("click", function () {
+$("#addComment").on("click", function () {
   // Grab the id associated with the article from the Save button
   var thisId = $(this).attr("data-id");
 
