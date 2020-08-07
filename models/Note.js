@@ -8,11 +8,13 @@ var Schema = mongoose.Schema;
 var NoteSchema = new Schema({
   // `title` is of type String
   title: {
-    type: String
+    type: String,
+    required: true
   },
   // `body` is of type String
   body: {
-    type: String
+    type: String,
+    required: true
   }
 });
 

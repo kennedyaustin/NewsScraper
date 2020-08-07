@@ -34,7 +34,6 @@ function getArticles() {
 getArticles();
 
 // Onclick event to show the notes that have already been added to the page when a particular post is clicked on
-var articleID;
 $(document).on("click", "li", function() {
   // Empty the notes from the note section when there are none
   $('#userComments').empty()
@@ -51,8 +50,8 @@ $(document).on("click", "li", function() {
 
     for (var i = 0; i < data.notes.length; i++) {
       if (data.notes[i].title && data.notes[i].body) {
-        $('#userComments').append("<li class='list-group-item'><strong>Title:</strong><br> " + data.notes[i].title + "</li>");
-        $('#userComments').append("<li class='list-group-item'><strong>Comment:</strong><br> " + data.notes[i].body + "</li>"); 
+        $('#userComments').append("<div class='list-group-item'><strong>Title:</strong><br> " + data.notes[i].title + "</div>");
+        $('#userComments').append("<div class='list-group-item'><strong>Comment:</strong><br> " + data.notes[i].body + "</div>"); 
       }
     }
     
@@ -65,21 +64,21 @@ $("#addComment").on("click", function () {
   // Grab the id associated with the article from the Save button
   var thisId = $(this).attr("data-id");
 
-  // Run a POST request to change the note, using what's entered in the inputs
+  // Run a POST request to change the comment, using what's entered in the inputs
   $.ajax({
     method: "POST",
     url: "/submit/" + thisId,
     data: {
       // Value taken from title input
-      title: $("#titleinput").val(),
-      // Value taken from note textarea
-      body: $("#bodyinput").val()
+      title: $("#titleinput").val().trim(),
+      // Value taken from comment textarea
+      body: $("#bodyinput").val().trim()
     }
   })
   .then(function(data) {
 
     // Reload page so the number of current comments are added
-    window.location.reload()
+    getArticles()
 
   });
 
@@ -87,3 +86,4 @@ $("#addComment").on("click", function () {
   $("#titleinput").val("");
   $("#bodyinput").val("");
 });
+
