@@ -14,7 +14,7 @@ var db = require("./models");
 const Article = require("./models/Article");
 const Note = require("./models/Note.js");
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Initialize Express
 var app = express();
