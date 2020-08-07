@@ -37,21 +37,27 @@ mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true 
 // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
-  axios.get("https://www.nytimes.com/section/world/americas").then(function(response) {
+  axios.get("https://www.npr.org/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
     // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function(i, element) {
+    $(".story-wrap").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
-        .children("a")
+        .find("h3.title")
         .text();
+
+      result.summary = $(this)
+        .find(".teaser")
+        .text();
+        
       result.link = $(this)
-        .children("a")
+        .find("h3.title")
+        .parent("a[href]")
         .attr("href");
 
       // Create a new Article using the `result` object built from scraping
@@ -66,10 +72,17 @@ app.get("/scrape", function(req, res) {
         });
     });
 
-    // Send a message to the client
-    res.send("Scrape Complete");
   });
+  // Send a message to the client
+  res.redirect('/')
 });
+
+// Reload page when the Save button is clicked
+app.get('/', function(req, res) {
+
+  res.send(index.html)
+
+})
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
@@ -166,7 +179,7 @@ app.post("/submit/:id", function (req, res) {
         else {
             res.json(newNote);
         }
-
+        
       });
     }
   });
